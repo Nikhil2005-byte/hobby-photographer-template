@@ -1,48 +1,60 @@
-import { projects } from '@/data/projects';
-import { PortfolioGrid } from '@/components/portfolio/PortfolioGrid';
-import { SEOHead } from '@/components/seo/SEOHead';
-import { motion } from 'framer-motion';
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import Navbar from "@/components/portfolio/Navbar";
+import Hero from "@/components/portfolio/Hero";
+import About from "@/components/portfolio/About";
+import Skills from "@/components/portfolio/Skills";
+import Projects from "@/components/portfolio/Projects";
+import Experience from "@/components/portfolio/Experience";
+import Education from "@/components/portfolio/Education";
+import Certifications from "@/components/portfolio/Certifications";
+import Resume from "@/components/portfolio/Resume";
+import Contact from "@/components/portfolio/Contact";
+import Footer from "@/components/portfolio/Footer";
+import MatrixRain from "@/components/portfolio/MatrixRain";
 
-/**
- * Portfolio page with masonry grid
- * Features smooth animations and responsive layout
- */
 export default function Portfolio() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center"
+        >
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin mx-auto" />
+            <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-b-secondary/50 rounded-full animate-spin mx-auto" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }} />
+          </div>
+          <p className="terminal-text mt-4 font-mono text-sm">Initializing security protocols...</p>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <SEOHead 
-        title="Portfolio"
-        description="Browse my complete photography portfolio featuring portraits, landscapes, editorial work, architecture, and documentary projects."
-      />
-      
-      <div className="min-h-screen">
-        {/* Hero Section */}
-      <section className="relative py-24 md:py-32 px-6 lg:px-8 border-b border-border">
-        <div className="max-w-7xl mx-auto text-center space-y-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-light tracking-wide mb-4">
-              Portfolio
-            </h1>
-            <p className="text-lg md:text-xl text-muted-foreground font-light tracking-wide max-w-2xl mx-auto">
-              A curated collection of photography spanning diverse subjects and styles
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Portfolio Grid - Edge to edge */}
-      <section className="py-12 md:py-16 px-2 md:px-4">
-        <PortfolioGrid projects={projects} />
-      </section>
-
-        {/* Bottom spacing */}
-        <div className="h-24" />
+    <main className="min-h-screen bg-background relative overflow-hidden">
+      <MatrixRain />
+      <div className="relative z-10">
+        <Navbar />
+        <Hero />
+        <About />
+        <Skills />
+        <Projects />
+        <Experience />
+        <Education />
+        <Certifications />
+        <Resume />
+        <Contact />
+        <Footer />
       </div>
-    </>
+    </main>
   );
 }
