@@ -55,25 +55,18 @@ const Resume = () => {
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
-                  href="#"
+                  href="/resume/NIKHILR.pdf"
+                  download="Nikhil_Kumar_Yadav_Resume.pdf"
                   className="btn-primary flex items-center justify-center gap-2 group"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    // Add resume download functionality here
-                    alert("Resume download will be available once you add your resume PDF file.");
-                  }}
                 >
                   <Download className="w-5 h-5 group-hover:translate-y-0.5 transition-transform" />
                   Download Resume
                 </a>
                 <a
-                  href="#"
+                  href="/resume/NIKHILR.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="btn-outline flex items-center justify-center gap-2 group"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    // Add resume preview functionality here
-                    alert("Resume preview will be available once you add your resume PDF file.");
-                  }}
                 >
                   <Eye className="w-5 h-5 group-hover:scale-110 transition-transform" />
                   Preview
