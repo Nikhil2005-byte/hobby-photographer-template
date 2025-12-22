@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { motion } from 'framer-motion';
 import { Loader2, CheckCircle2 } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 import {
   Form,
   FormControl,
@@ -23,6 +24,11 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 
+// EmailJS configuration
+const EMAILJS_SERVICE_ID = 'service_0y5w5og';
+const EMAILJS_TEMPLATE_ID = 'template_giwtdr4';
+const EMAILJS_PUBLIC_KEY = 'otYqL8GwYTTdGjCD3';
+
 // Validation schema with security best practices
 const contactFormSchema = z.object({
   name: z
@@ -35,7 +41,7 @@ const contactFormSchema = z.object({
     .trim()
     .email({ message: 'Please enter a valid email address' })
     .max(255, { message: 'Email must be less than 255 characters' }),
-  projectType: z.enum(['editorial', 'commercial', 'personal'], {
+  projectType: z.enum(['security-audit', 'penetration-testing', 'consulting', 'other'], {
     required_error: 'Please select a project type',
   }),
   message: z
@@ -48,8 +54,8 @@ const contactFormSchema = z.object({
 type ContactFormValues = z.infer<typeof contactFormSchema>;
 
 /**
- * Contact form component with validation and error handling
- * Uses react-hook-form + zod for type-safe validation
+ * Contact form component with EmailJS integration
+ * Messages are sent directly to your email
  */
 export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -69,24 +75,19 @@ export function ContactForm() {
     setIsSubmitting(true);
     
     try {
-      // Formspree integration - replace YOUR_FORM_ID with your actual form ID
-      const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: data.name,
-          email: data.email,
-          projectType: data.projectType,
+      // Send email using EmailJS
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          from_name: data.name,
+          from_email: data.email,
+          project_type: data.projectType,
           message: data.message,
-          _subject: `New ${data.projectType} inquiry from ${data.name}`,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to send message');
-      }
+          to_name: 'Nikhil',
+        },
+        EMAILJS_PUBLIC_KEY
+      );
 
       // Show success state
       setIsSuccess(true);
@@ -97,6 +98,7 @@ export function ContactForm() {
         setIsSuccess(false);
       }, 5000);
     } catch (error) {
+      console.error('EmailJS error:', error);
       form.setError('root', {
         message: 'Failed to send message. Please try again.',
       });
@@ -191,14 +193,17 @@ export function ContactForm() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent className="bg-popover z-50">
-                  <SelectItem value="editorial" className="font-light">
-                    Editorial
+                  <SelectItem value="security-audit" className="font-light">
+                    Security Audit
                   </SelectItem>
-                  <SelectItem value="commercial" className="font-light">
-                    Commercial
+                  <SelectItem value="penetration-testing" className="font-light">
+                    Penetration Testing
                   </SelectItem>
-                  <SelectItem value="personal" className="font-light">
-                    Personal
+                  <SelectItem value="consulting" className="font-light">
+                    Consulting
+                  </SelectItem>
+                  <SelectItem value="other" className="font-light">
+                    Other
                   </SelectItem>
                 </SelectContent>
               </Select>
